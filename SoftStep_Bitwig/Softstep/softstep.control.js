@@ -73,7 +73,7 @@ function init()
 	arranger = host.createArranger(0);
 	master = host.createMasterTrack(8);
 	primaryDevice = cursorTrack.getPrimaryDevice();
-	cursorDevice = cursorTrack.createCursorDevice('Primary', true);
+	cursorDevice = cursorTrack.createCursorDevice('Primary', 2);
 	deviceBank = cursorTrack.createDeviceBank(4);
 	//println("This is the SoftStep Script")
 
@@ -102,9 +102,9 @@ function init()
 		}
 	})
 
-	trackBank.addTrackScrollPositionObserver(function(value)
+	trackBank.addSceneScrollPositionObserver(function(value)
 		{
-			println(value)
+			//println(value)
 		}, 0
 		)
 
@@ -147,7 +147,7 @@ function onMidi(status, data1, data2)
 		if (data1 == 127)
 		{
 			mode = 2
-			println("FX Page")
+			//println("FX Page")
 			clearLEDs()
 			trackLED()
 			deviceLED()
@@ -155,7 +155,7 @@ function onMidi(status, data1, data2)
 		if (data1 == 126)
 		{
 			mode = 1
-			println("Clip Page")
+			//println("Clip Page")
 			clearLEDs()
 			sendClipLEDs()
 			scrollLEDs()
