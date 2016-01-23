@@ -142,7 +142,7 @@ function onMidi(status, data1, data2)
 		//println("Notes"  + " " + data1 + " " + data2)
 		launchClipSlots(data1, data2);
 		scrollTrackBank(data1, data2);
-		launchScenes(data1, data2);
+		//launchScenes(data1, data2);
 		stopClips(data1, data2);
 		if (data1 == 127)
 		{

@@ -85,6 +85,7 @@ function stopClips(data1, data2)
 {
 	if (data1 >= 8 && data1 < 16 && data2 == 127)
 		{	
+			println("test")
 			data1 = data1 - 8
 			trackBank.getTrack((data1)/2).stop();			
 		}
