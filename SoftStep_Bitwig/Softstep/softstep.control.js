@@ -38,6 +38,7 @@ var isRecording = initArray(0, 8);
 var isQueued = initArray(0, 8);
 var pendingLEDs = initArray(0, 8);
 var currentLEDs = initArray(0,8);
+var macroValues =  initArray(0, 8);
 var selectedTrack = 0;
 var canScrollUp = false
 var preset = 0 // 0 = clips, 1 = macros
@@ -75,6 +76,8 @@ function init()
 	primaryDevice = cursorTrack.getPrimaryDevice();
 	cursorDevice = cursorTrack.createCursorDevice('Primary', 2);
 	deviceBank = cursorTrack.createDeviceBank(4);
+
+
 	//println("This is the SoftStep Script")
 
 		
@@ -82,7 +85,7 @@ function init()
 	{
 		println(deviceScroll)
 	})*/
-
+	
 
 	trackBank.addCanScrollScenesUpObserver(function(value)
 	{
@@ -113,6 +116,17 @@ function init()
 		deviceEnabled = value
 		deviceLED()
 	})
+
+	for (var p = 0; p < 4; p++)
+	{
+		var macro = primaryDevice.getMacro(p).getAmount();
+		macro.addValueObserver(128, makeIndexedFunction(p, function(index, value)
+			{
+				macroValues[index] = value;				
+			}
+		)
+	)};
+
 	for (var t = 0; t < NUM_TRACKS; t++)
 		{
 			var track = trackBank.getTrack(t); 
@@ -144,6 +158,7 @@ function onMidi(status, data1, data2)
 		scrollTrackBank(data1, data2);
 		//launchScenes(data1, data2);
 		stopClips(data1, data2);
+		deleteClips(data1, data2);
 		if (data1 == 127)
 		{
 			mode = 2

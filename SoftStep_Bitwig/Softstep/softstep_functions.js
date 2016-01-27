@@ -8,7 +8,9 @@ Copyright 2014 Evan Bogunia_____evanbeta@keithmcmillen.com
 
 var stopAll = 0;
 var device_select_state = 1;
-var selectedTrack = 0
+var selectedTrack = 0;
+var rate = 50;
+var padValue = 64;
 //var mode = 'clip'
 
 function trackSelect(data1, data2)
@@ -44,9 +46,32 @@ function deviceLED()
 	}
 }
 
+function macroInc(data1){
+	primaryDevice.getMacro(data1-100).getAmount().inc(1,128)
+	if (padValue > 64){
+	host.scheduleTask(macroInc, [data1], rate)
+	}
+}
+
+function macroDec(data1){
+	primaryDevice.getMacro(data1-100).getAmount().inc(-1,128)
+	if (padValue < 64){
+	host.scheduleTask(macroDec, [data1], rate)
+	}
+}
+
 function macroControl(data1, data2)
 {
-	primaryDevice.getMacro(data1-100).getAmount().set(data2,128)
+	//rate = rate/(Math.abs(data2 - 64)/32))
+	padValue = data2;
+	if(data2 > 64){
+		host.scheduleTask(macroInc,[data1], rate)
+		}
+	else if(data2<64){
+		host.scheduleTask(macroDec,[data1], rate)
+	}
+    
+	
 }
 
 function deviceOn()
@@ -85,9 +110,17 @@ function stopClips(data1, data2)
 {
 	if (data1 >= 8 && data1 < 16 && data2 == 127)
 		{	
-			println("test")
-			data1 = data1 - 8
-			trackBank.getTrack((data1)/2).stop();			
+			clip = data1 - 8
+			trackBank.getTrack((clip)/2).stop();			
+		}
+}
+
+function deleteClips(data1, data2)
+{
+	if (data1 >= 16 && data1 < 24 && data2 == 127)
+		{
+			clip = data1 - 16
+			trackBank.getTrack((clip)/2).getClipLauncher().deleteClip(clip % 2);
 		}
 }
 
@@ -115,30 +148,20 @@ function getGridObserverFunc(track, varToStore)
 
 function scrollTrackBank(data1, data2)
 {
-	if (data1 == 16 && data2 == 127)
+	if (data1 == 24 && data2 == 127)
 	{
 		trackBank.scrollScenesUp()
-		if (stopAll == 1)
+		
+	}else if (data1 == 25 && data2 == 127)
+	{
+		trackBank.scrollScenesDown()
+	}else if (data1 == 26 && data2 == 127)
 		{
 			for(i = 0; i < 4; i ++)
 			{
 				trackBank.getTrack(i).stop();
 			}
 		}
-		stopAll = 1
-		host.scheduleTask(function()
-		{
-			stopAll = 0
-		},null, 250);
-
-
-			
-
-
-	}else if (data1 == 17 && data2 == 127)
-	{
-		trackBank.scrollScenesDown()
-	}
 
 }
 
