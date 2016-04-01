@@ -14,12 +14,9 @@ host.defineController("Keith McMillen Instruments", "K-Mix", "1.0", "4034A480-F8
 host.defineMidiPorts(1,1);
 
 //Define/set input/output port names
-var portNames 	= 	"K Mix Audio Control";
-host.addDeviceNameBasedDiscoveryPair(["K Mix Control Surface"],["K Mix Control_Surface"]);
+host.addDeviceNameBasedDiscoveryPair(["K-Mix Control Surface"],["K-Mix Control Surface"]);
 
 var transport;
-var HIGHEST_CC = 119;
-var LOWEST_CC = 1;
 var position = 0;
 var rewind_length = 1.0 //this is a value in bars
 //------------------------------------ Init -----------------------------------//
